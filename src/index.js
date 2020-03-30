@@ -1,15 +1,25 @@
 import { createStore } from './store'
 
 const todos = (state = [], action) => {
-  if (action.type === 'ADD_TODO') {
-    return state.concat(action.todo)
+  switch (action.type) {
+    case 'ADD_TODO':
+      return state.concat(action.todo)
+    case 'REMOVE_TODO':
+      return state.filter(todo => todo.id !== action.id)
+    case 'TOGGLE_TODO':
+      return state.map(todo => (
+        todo.id === action.id
+          ? { ...todo, complete: !todo.complete }
+          : todo
+      ))
+    default:
+      return state
   }
-  return state
 }
 
 const store = createStore(todos)
 
-const unsubscribe = store.subscribe(() => console.log('The new state:', store.getState()))
+store.subscribe(() => console.log('The new state:', store.getState()))
 
 store.dispatch({
   type: 'ADD_TODO',
@@ -29,13 +39,12 @@ store.dispatch({
   }
 })
 
-unsubscribe()
+store.dispatch({
+  type: 'REMOVE_TODO',
+  id: 0
+})
 
 store.dispatch({
-  type: 'ADD_TODO',
-  todo: {
-    id: 2,
-    name: 'Learn Node.js',
-    complete: false
-  }
+  type: 'TOGGLE_TODO',
+  id: 1
 })
