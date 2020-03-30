@@ -17,7 +17,23 @@ const todos = (state = [], action) => {
   }
 }
 
-const store = createStore(todos)
+const goals = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_GOAL':
+      return [...state, action.goal]
+    case 'REMOVE_GOAL':
+      return state.filter(goal => goal.id !== action.id)
+    default:
+      return state
+  }
+}
+
+const rootReducer = (state = {}, action) => ({
+  todos: todos(state.todos, action),
+  goals: goals(state.goals, action)
+})
+
+const store = createStore(rootReducer)
 
 store.subscribe(() => console.log('The new state:', store.getState()))
 
@@ -46,5 +62,26 @@ store.dispatch({
 
 store.dispatch({
   type: 'TOGGLE_TODO',
+  id: 1
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 0,
+    name: 'Lose 10 kg'
+  }
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 1,
+    name: 'Learn to fly'
+  }
+})
+
+store.dispatch({
+  type: 'REMOVE_GOAL',
   id: 1
 })

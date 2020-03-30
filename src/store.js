@@ -29,4 +29,11 @@ const createStore = (reducer) => {
   }
 }
 
-export { createStore }
+const combineReducers = () => ({
+
+})
+
+export {
+  createStore,
+  combineReducers
+}
