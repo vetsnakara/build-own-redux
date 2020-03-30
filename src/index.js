@@ -1,5 +1,6 @@
 import { createStore } from './store'
 
+// action types
 const ADD_TODO = 'ADD_TODO'
 const REMOVE_TODO = 'REMOVE_TODO'
 const TOGGLE_TODO = 'TOGGLE_TODO'
@@ -7,6 +8,33 @@ const TOGGLE_TODO = 'TOGGLE_TODO'
 const ADD_GOAL = 'ADD_GOAL'
 const REMOVE_GOAL = 'REMOVE_GOAL'
 
+// action creators
+const addTodoAction = todo => ({
+  type: ADD_TODO,
+  todo
+})
+
+const removeTodoAction = id => ({
+  type: REMOVE_TODO,
+  id
+})
+
+const toggleTodoAction = id => ({
+  type: TOGGLE_TODO,
+  id
+})
+
+const addGoalAction = goal => ({
+  type: ADD_GOAL,
+  goal
+})
+
+const removeGoalAction = id => ({
+  type: REMOVE_GOAL,
+  id
+})
+
+// reducers
 const todos = (state = [], action) => {
   switch (action.type) {
     case ADD_TODO:
@@ -35,60 +63,44 @@ const goals = (state = [], action) => {
   }
 }
 
+// root reducer
 const rootReducer = (state = {}, action) => ({
   todos: todos(state.todos, action),
   goals: goals(state.goals, action)
 })
 
+// store
 const store = createStore(rootReducer)
 
+// subscribe
 store.subscribe(() => console.log('The new state:', store.getState()))
 
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
-    id: 0,
-    name: 'Learn Redux',
-    complete: false
-  }
-})
+// dispatch todo actions
+store.dispatch(addTodoAction({
+  id: 0,
+  name: 'Learn Redux',
+  complete: false
+}))
 
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
-    id: 1,
-    name: 'Learn Pure functions',
-    complete: false
-  }
-})
+store.dispatch(addTodoAction({
+  id: 1,
+  name: 'Learn Pure functions',
+  complete: false
+}))
 
-store.dispatch({
-  type: REMOVE_TODO,
-  id: 0
-})
+store.dispatch(removeTodoAction(0))
 
-store.dispatch({
-  type: TOGGLE_TODO,
-  id: 1
-})
+store.dispatch(toggleTodoAction(1))
 
-store.dispatch({
-  type: ADD_GOAL,
-  goal: {
-    id: 0,
-    name: 'Lose 10 kg'
-  }
-})
+// dispatch goal action
+store.dispatch(addGoalAction({
+  id: 0,
+  name: 'Lose 10 kg'
+}))
 
-store.dispatch({
-  type: ADD_GOAL,
-  goal: {
-    id: 1,
-    name: 'Learn to fly'
-  }
-})
+store.dispatch(addGoalAction({
+  id: 1,
+  name: 'Learn to fly'
+}))
 
-store.dispatch({
-  type: REMOVE_GOAL,
-  id: 1
-})
+store.dispatch(removeGoalAction(1))
