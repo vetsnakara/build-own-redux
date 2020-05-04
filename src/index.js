@@ -75,46 +75,59 @@ const rootReducer = (state = {}, action) => ({
 const store = createStore(rootReducer);
 
 // subscribe
-store.subscribe(() => console.log("The new state:", store.getState()));
+store.subscribe(() => {
+  const { todos, goals } = store.getState();
 
-// dispatch todo actions
-store.dispatch(
-  addTodoAction({
-    id: 0,
-    name: "Learn Redux",
-    complete: false,
-  })
-);
+  const todoList = document.querySelector("#todos");
+  const goalList = document.querySelector("#goals");
 
-store.dispatch(
-  addTodoAction({
-    id: 1,
-    name: "Learn Pure functions",
-    complete: false,
-  })
-);
+  todoList.innerHTML = "";
+  goalList.innerHTML = "";
 
-store.dispatch(removeTodoAction(0));
+  todos.forEach((todo) => addTodoToDom(todoList, todo));
+  goals.forEach((goal) => addGoalToDom(goalList, goal));
+});
 
-store.dispatch(toggleTodoAction(1));
+const addTodoToDom = (parent, item) => {
+  const node = document.createElement("li");
 
-// dispatch goal action
-store.dispatch(
-  addGoalAction({
-    id: 0,
-    name: "Lose 10 kg",
-  })
-);
+  node.style.textDecoration = item.complete ? "line-through" : "normal";
 
-store.dispatch(
-  addGoalAction({
-    id: 1,
-    name: "Learn to fly",
-    complete: false,
-  })
-);
+  node.addEventListener("click", () =>
+    store.dispatch(toggleTodoAction(item.id))
+  );
 
-store.dispatch(removeGoalAction(1));
+  const text = document.createTextNode(item.name);
+  node.appendChild(text);
+
+  const button = createRemoveBtn(() =>
+    store.dispatch(removeTodoAction(item.id))
+  );
+  node.appendChild(button);
+
+  parent.appendChild(node);
+};
+
+const addGoalToDom = (parent, item) => {
+  const node = document.createElement("li");
+
+  const text = document.createTextNode(item.name);
+  node.appendChild(text);
+
+  const button = createRemoveBtn(() =>
+    store.dispatch(removeGoalAction(item.id))
+  );
+  node.appendChild(button);
+
+  parent.appendChild(node);
+};
+
+const createRemoveBtn = (callback) => {
+  const button = document.createElement("button");
+  button.textContent = "x";
+  button.addEventListener("click", callback);
+  return button;
+};
 
 // DOM code
 const addTodo = () => {
@@ -142,7 +155,6 @@ const addGoal = () => {
     addGoalAction({
       id: uid(),
       name,
-      complete: false,
     })
   );
 };
