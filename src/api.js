@@ -1,7 +1,33 @@
 import { uid } from "./utils";
 
-let todos = [];
-let goals = [];
+let todos = [
+  {
+    id: uid(),
+    name: "Todo 1",
+    completed: false,
+  },
+  {
+    id: uid(),
+    name: "Todo 2",
+    completed: false,
+  },
+  {
+    id: uid(),
+    name: "Todo 3",
+    completed: false,
+  },
+];
+
+let goals = [
+  {
+    id: uid(),
+    name: "Goal 1",
+  },
+  {
+    id: uid(),
+    name: "Goal 2",
+  },
+];
 
 const TIMEOUT = 1000;
 

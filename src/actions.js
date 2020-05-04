@@ -6,6 +6,8 @@ export const TOGGLE_TODO = "TOGGLE_TODO";
 export const ADD_GOAL = "ADD_GOAL";
 export const REMOVE_GOAL = "REMOVE_GOAL";
 
+export const FETCH_DATA = "FETCH_DATA";
+
 // action creators
 export const addTodoAction = (todo) => ({
   type: ADD_TODO,
@@ -30,4 +32,10 @@ export const addGoalAction = (goal) => ({
 export const removeGoalAction = (id) => ({
   type: REMOVE_GOAL,
   id,
+});
+
+export const fetchDataAction = (todos, goals) => ({
+  type: FETCH_DATA,
+  todos,
+  goals,
 });

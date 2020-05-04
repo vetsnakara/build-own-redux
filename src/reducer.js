@@ -4,6 +4,7 @@ import {
   REMOVE_GOAL,
   REMOVE_TODO,
   TOGGLE_TODO,
+  FETCH_DATA,
 } from "./actions";
 
 const todos = (state = [], action) => {
@@ -16,6 +17,8 @@ const todos = (state = [], action) => {
       return state.map((todo) =>
         todo.id === action.id ? { ...todo, complete: !todo.complete } : todo
       );
+    case FETCH_DATA:
+      return action.todos;
     default:
       return state;
   }
@@ -27,6 +30,8 @@ const goals = (state = [], action) => {
       return [...state, action.goal];
     case REMOVE_GOAL:
       return state.filter((goal) => goal.id !== action.id);
+    case FETCH_DATA:
+      return action.goals;
     default:
       return state;
   }
