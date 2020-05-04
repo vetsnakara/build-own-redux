@@ -2,8 +2,7 @@ import React from "react";
 
 import { List } from "./List";
 
-import { addGoalAction, removeGoalAction } from "../actions";
-import { addGoal, deleteGoal } from "../api";
+import { handleAddGoal, handleRemoveGoal } from "../actions";
 
 export class Goals extends React.Component {
   state = {
@@ -25,21 +24,17 @@ export class Goals extends React.Component {
   };
 
   handleGoalAdd = () => {
-    addGoal(this.state.text).then((goal) => {
-      this.props.store.dispatch(addGoalAction(goal));
-      this.setState({
-        text: "",
-      });
-    });
+    this.props.store.dispatch(
+      handleAddGoal(this.state.text, () =>
+        this.setState({
+          text: "",
+        })
+      )
+    );
   };
 
   handleGoalRemove = (goal) => {
-    this.props.store.dispatch(removeGoalAction(goal.id));
-
-    deleteGoal(goal.id).catch(() => {
-      this.props.store.dispatch(addGoalAction(goal));
-      alert("An error occurred. Try again");
-    });
+    this.props.store.dispatch(handleRemoveGoal(goal));
   };
 
   render() {

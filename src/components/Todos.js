@@ -2,8 +2,7 @@ import React from "react";
 
 import { List } from "./List";
 
-import { addTodoAction, toggleTodoAction, removeTodoAction } from "../actions";
-import { addTodo, deleteTodo, toggleTodo } from "../api";
+import { handleAddTodo, handleRemoveTodo, handleToggleTodo } from "../actions";
 
 export class Todos extends React.Component {
   state = {
@@ -25,30 +24,21 @@ export class Todos extends React.Component {
   };
 
   handleTodoAdd = () => {
-    addTodo(this.state.text).then((todo) => {
-      this.props.store.dispatch(addTodoAction(todo));
-      this.setState({
-        text: "",
-      });
-    });
+    this.props.store.dispatch(
+      handleAddTodo(this.state.text, () =>
+        this.setState({
+          text: "",
+        })
+      )
+    );
   };
 
   handleTodoToggle = (todo) => {
-    this.props.store.dispatch(toggleTodoAction(todo.id));
-
-    toggleTodo(todo.id).catch(() => {
-      this.props.store.dispatch(toggleTodoAction(todo.id));
-      alert("An error occurred. Try again.");
-    });
+    this.props.store.dispatch(handleToggleTodo(todo.id));
   };
 
   handleTodoRemove = (todo) => {
-    this.props.store.dispatch(removeTodoAction(todo.id));
-
-    deleteTodo(todo.id).catch(() => {
-      this.props.store.dispatch(addTodoAction(todo));
-      alert("An error occurred.Try again");
-    });
+    this.props.store.dispatch(handleRemoveTodo(todo));
   };
 
   render() {

@@ -1,3 +1,5 @@
+import * as api from "./api";
+
 // action types
 export const ADD_TODO = "ADD_TODO";
 export const REMOVE_TODO = "REMOVE_TODO";
@@ -39,3 +41,48 @@ export const fetchDataAction = (todos, goals) => ({
   todos,
   goals,
 });
+
+// thunks
+
+export const handleAddTodo = (name, cb) => (dispatch) => {
+  api.addTodo(name).then((todo) => {
+    dispatch(addTodoAction(todo));
+    cb();
+  });
+};
+
+export const handleRemoveTodo = (todo) => (dispatch) => {
+  // optimistic remove todo
+  dispatch(removeTodoAction(todo.id));
+
+  api.deleteTodo(todo.id).catch(() => {
+    dispatch(addTodoAction(todo));
+    alert("An error occurred.Try again");
+  });
+};
+
+export const handleToggleTodo = (id) => (dispatch) => {
+  // optimistic toggle todo
+  dispatch(toggleTodoAction(id));
+
+  api.toggleTodo(id).catch(() => {
+    dispatch(toggleTodoAction(id));
+    alert("An error occurred. Try again.");
+  });
+};
+
+export const handleAddGoal = (name, cb) => (dispatch) => {
+  api.addGoal(name).then((goal) => {
+    dispatch(addGoalAction(goal));
+    cb();
+  });
+};
+
+export const handleRemoveGoal = (goal) => (dispatch) => {
+  dispatch(removeGoalAction(goal.id));
+
+  api.deleteGoal(goal.id).catch(() => {
+    dispatch(addGoalAction(goal));
+    alert("An error occurred. Try again");
+  });
+};
