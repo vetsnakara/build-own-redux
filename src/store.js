@@ -1,39 +1,58 @@
-const createStore = (reducer) => {
-  let state
-  let listeners = []
+const createStore = (reducer, initState = {}, enhancer) => {
+  if (enhancer) {
+    return enhancer(createStore)(reducer, initState);
+  }
 
-  const getState = () => state
+  let state = initState;
+  let listeners = [];
 
-  const subscribe = listener => {
+  const getState = () => state;
+
+  const subscribe = (listener) => {
     // add change state listener
-    listeners.push(listener)
+    listeners.push(listener);
 
     // return unsubscribe function
     return () => {
-      listeners = listeners.filter(l => l !== listener)
-    }
-  }
+      listeners = listeners.filter((l) => l !== listener);
+    };
+  };
 
-  const dispatch = action => {
+  const dispatch = (action) => {
     // do state change
-    state = reducer(state, action)
+    state = reducer(state, action);
 
     // call change state listeners
-    listeners.forEach(listener => listener())
-  }
+    listeners.forEach((listener) => listener());
+  };
 
   return {
     getState,
     subscribe,
-    dispatch
+    dispatch,
+  };
+};
+
+const combineReducers = () => ({});
+
+const thunk = ({ dispatch, getState }) => (next) => (action) => {
+  if (typeof action === "function") {
+    return action(dispatch, getState);
   }
-}
+  return next(action);
+};
 
-const combineReducers = () => ({
+const logger = ({ dispatch, getState }) => (next) => (action) => {
+  console.log("action logger: ", action.type);
+  next(action);
+};
 
-})
+const applyMiddleware = (middleware) => (createStore) => (...args) => {
+  const store = createStore(...args);
+  return {
+    ...store,
+    dispatch: middleware(store)(store.dispatch),
+  };
+};
 
-export {
-  createStore,
-  combineReducers
-}
+export { createStore, combineReducers, applyMiddleware, thunk, logger };

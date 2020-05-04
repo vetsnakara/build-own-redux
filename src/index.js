@@ -1,5 +1,4 @@
-import { createStore as reduxCreateStore, combineReducers } from "redux";
-import { createStore } from "./store";
+import { createStore, applyMiddleware, logger } from "./store";
 
 const uid = () =>
   Math.random().toString(36).substring(2, 15) +
@@ -66,14 +65,26 @@ const goals = (state = [], action) => {
   }
 };
 
+// middleware
+function checkAndDispatch(store, action) {
+  if (
+    action.type === "ADD_TODO" &&
+    action.todo.name.toLowerCase().includes("bitcoin")
+  ) {
+    return alert("It's a bad idea!");
+  }
+
+  return store.dispatch(action);
+}
+
 // root reducer
-const rootReducer = combineReducers({
-  todos,
-  goals,
+const rootReducer = (state = {}, action) => ({
+  todos: todos(state.todos, action),
+  goals: goals(state.goals, action),
 });
 
 // store
-const store = reduxCreateStore(rootReducer);
+const store = createStore(rootReducer, {}, applyMiddleware(logger));
 
 // subscribe
 store.subscribe(() => {
@@ -162,3 +173,18 @@ const addGoal = () => {
 
 document.querySelector("#todoBtn").addEventListener("click", addTodo);
 document.querySelector("#goalBtn").addEventListener("click", addGoal);
+
+// const trunk = (store) => (dispatch) => (state, action) => {
+//   if (typeof action === "function") {
+//     return action(dispath, store.getState);
+//   }
+//   return dispatch(action);
+// };
+
+// function applyMiddleware (...middlewares) = {
+//   // carrying middlewares by store
+//   // compose middlewares
+//   return middleware
+// }
+
+// function createStore(reducer, )
