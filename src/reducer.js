@@ -37,8 +37,18 @@ const goals = (state = [], action) => {
   }
 };
 
+const loading = (state = true, action) => {
+  switch (action.type) {
+    case FETCH_DATA:
+      return false;
+    default:
+      return state;
+  }
+};
+
 // root reducer
 export const rootReducer = (state = {}, action) => ({
   todos: todos(state.todos, action),
   goals: goals(state.goals, action),
+  loading: loading(state.loading, action),
 });
