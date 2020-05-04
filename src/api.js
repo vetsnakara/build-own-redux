@@ -49,27 +49,31 @@ export const fetchGoals = () =>
 
 export const addTodo = (name) =>
   new Promise((res) => {
-    const todo = {
-      id: uid(),
-      name,
-      completed: false,
-    };
+    setTimeout(() => {
+      const todo = {
+        id: uid(),
+        name,
+        completed: false,
+      };
 
-    todos = [todo, ...todos];
+      todos = [todo, ...todos];
 
-    res(todo);
+      res(todo);
+    }, TIMEOUT);
   });
 
 export const addGoal = (name) =>
   new Promise((res) => {
-    const goal = {
-      id: uid(),
-      name,
-    };
+    setTimeout(() => {
+      const goal = {
+        id: uid(),
+        name,
+      };
 
-    goals = [goal, ...goals];
+      goals = [goal, ...goals];
 
-    res(goal);
+      res(goal);
+    }, TIMEOUT);
   });
 
 export const deleteTodo = (id) =>

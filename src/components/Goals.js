@@ -3,8 +3,7 @@ import React from "react";
 import { List } from "./List";
 
 import { addGoalAction, removeGoalAction } from "../actions";
-import { uid } from "../utils";
-import { deleteGoal } from "../api";
+import { addGoal, deleteGoal } from "../api";
 
 export class Goals extends React.Component {
   state = {
@@ -26,15 +25,11 @@ export class Goals extends React.Component {
   };
 
   handleGoalAdd = () => {
-    this.props.store.dispatch(
-      addGoalAction({
-        id: uid(),
-        name: this.state.text,
-      })
-    );
-
-    this.setState({
-      text: "",
+    addGoal(this.state.text).then((goal) => {
+      this.props.store.dispatch(addGoalAction(goal));
+      this.setState({
+        text: "",
+      });
     });
   };
 

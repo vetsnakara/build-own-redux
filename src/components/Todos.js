@@ -3,8 +3,7 @@ import React from "react";
 import { List } from "./List";
 
 import { addTodoAction, toggleTodoAction, removeTodoAction } from "../actions";
-import { uid } from "../utils";
-import { deleteTodo, toggleTodo } from "../api";
+import { addTodo, deleteTodo, toggleTodo } from "../api";
 
 export class Todos extends React.Component {
   state = {
@@ -26,16 +25,11 @@ export class Todos extends React.Component {
   };
 
   handleTodoAdd = () => {
-    this.props.store.dispatch(
-      addTodoAction({
-        id: uid(),
-        name: this.state.text,
-        completed: false,
-      })
-    );
-
-    this.setState({
-      text: "",
+    addTodo(this.state.text).then((todo) => {
+      this.props.store.dispatch(addTodoAction(todo));
+      this.setState({
+        text: "",
+      });
     });
   };
 
