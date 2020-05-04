@@ -10,8 +10,8 @@ export const List = ({ items, onToggle = () => {}, onRemove }) => {
             textDecoration: item.complete && "line-through",
           }}
         >
-          <span onClick={() => onToggle(item.id)}>{item.name}</span>
-          <button onClick={() => onRemove(item.id)}>x</button>
+          <span onClick={() => onToggle(item)}>{item.name}</span>
+          <button onClick={() => onRemove(item)}>x</button>
         </li>
       ))}
     </ul>

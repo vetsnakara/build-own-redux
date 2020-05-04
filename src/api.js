@@ -1,5 +1,7 @@
 import { uid } from "./utils";
 
+const fail = () => Math.random() > 0.5;
+
 let todos = [
   {
     id: uid(),
@@ -71,27 +73,42 @@ export const addGoal = (name) =>
   });
 
 export const deleteTodo = (id) =>
-  new Promise((res) => {
+  new Promise((res, rej) => {
     setTimeout(() => {
+      if (fail()) {
+        return rej();
+      }
+
       todos = todos.filter((todo) => todo.id !== id);
+
       res();
     }, TIMEOUT);
   });
 
 export const deleteGoal = (id) =>
-  new Promise((res) => {
+  new Promise((res, rej) => {
     setTimeout(() => {
+      if (fail()) {
+        return rej();
+      }
+
       goals = goals.filter((goal) => goal.id !== id);
+
       res();
     }, TIMEOUT);
   });
 
 export const toggleTodo = (id) =>
-  new Promise((res) => {
+  new Promise((res, rej) => {
     setTimeout(() => {
+      if (fail()) {
+        return rej();
+      }
+
       todos = todos.map((todo) =>
         todo.id === id ? { ...todo, complete: !todo.complete } : todo
       );
+
       res();
     }, TIMEOUT);
   });

@@ -3,8 +3,8 @@ import React from "react";
 import { List } from "./List";
 
 import { addGoalAction, removeGoalAction } from "../actions";
-
 import { uid } from "../utils";
+import { deleteGoal } from "../api";
 
 export class Goals extends React.Component {
   state = {
@@ -38,8 +38,13 @@ export class Goals extends React.Component {
     });
   };
 
-  handleGoalRemove = (id) => {
-    this.props.store.dispatch(removeGoalAction(id));
+  handleGoalRemove = (goal) => {
+    this.props.store.dispatch(removeGoalAction(goal.id));
+
+    deleteGoal(goal.id).catch(() => {
+      this.props.store.dispatch(addGoalAction(goal));
+      alert("An error occurred. Try again");
+    });
   };
 
   render() {
