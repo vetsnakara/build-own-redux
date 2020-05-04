@@ -1,3 +1,4 @@
+// createStore
 const createStore = (reducer, initState = {}, enhancer) => {
   if (enhancer) {
     return enhancer(createStore)(reducer, initState);
@@ -33,20 +34,10 @@ const createStore = (reducer, initState = {}, enhancer) => {
   };
 };
 
+// todo: combineReducers
 const combineReducers = () => ({});
 
-const thunk = ({ dispatch, getState }) => (next) => (action) => {
-  if (typeof action === "function") {
-    return action(dispatch, getState);
-  }
-  return next(action);
-};
-
-const logger = ({ dispatch, getState }) => (next) => (action) => {
-  console.log("action logger: ", action.type);
-  next(action);
-};
-
+// applyMiddleware
 const applyMiddleware = (middleware) => (createStore) => (...args) => {
   const store = createStore(...args);
   return {
@@ -55,4 +46,4 @@ const applyMiddleware = (middleware) => (createStore) => (...args) => {
   };
 };
 
-export { createStore, combineReducers, applyMiddleware, thunk, logger };
+export { createStore, combineReducers, applyMiddleware };

@@ -1,4 +1,5 @@
-import { createStore, applyMiddleware, logger } from "./store";
+import { createStore, applyMiddleware } from "./store";
+import { bitcoin } from "./middlewares";
 
 const uid = () =>
   Math.random().toString(36).substring(2, 15) +
@@ -84,7 +85,7 @@ const rootReducer = (state = {}, action) => ({
 });
 
 // store
-const store = createStore(rootReducer, {}, applyMiddleware(logger));
+const store = createStore(rootReducer, {}, applyMiddleware(bitcoin));
 
 // subscribe
 store.subscribe(() => {
@@ -173,18 +174,3 @@ const addGoal = () => {
 
 document.querySelector("#todoBtn").addEventListener("click", addTodo);
 document.querySelector("#goalBtn").addEventListener("click", addGoal);
-
-// const trunk = (store) => (dispatch) => (state, action) => {
-//   if (typeof action === "function") {
-//     return action(dispath, store.getState);
-//   }
-//   return dispatch(action);
-// };
-
-// function applyMiddleware (...middlewares) = {
-//   // carrying middlewares by store
-//   // compose middlewares
-//   return middleware
-// }
-
-// function createStore(reducer, )
