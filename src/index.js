@@ -1,3 +1,4 @@
+import { createStore as reduxCreateStore, combineReducers } from "redux";
 import { createStore } from "./store";
 
 const uid = () =>
@@ -66,13 +67,13 @@ const goals = (state = [], action) => {
 };
 
 // root reducer
-const rootReducer = (state = {}, action) => ({
-  todos: todos(state.todos, action),
-  goals: goals(state.goals, action),
+const rootReducer = combineReducers({
+  todos,
+  goals,
 });
 
 // store
-const store = createStore(rootReducer);
+const store = reduxCreateStore(rootReducer);
 
 // subscribe
 store.subscribe(() => {
