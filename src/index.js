@@ -1,5 +1,6 @@
-import { createStore, applyMiddleware } from "./store";
-import { bitcoin } from "./middlewares";
+// import { createStore, applyMiddleware } from "./store";
+import { createStore, applyMiddleware } from "redux";
+import { logger } from "./middlewares";
 
 const uid = () =>
   Math.random().toString(36).substring(2, 15) +
@@ -66,18 +67,6 @@ const goals = (state = [], action) => {
   }
 };
 
-// middleware
-function checkAndDispatch(store, action) {
-  if (
-    action.type === "ADD_TODO" &&
-    action.todo.name.toLowerCase().includes("bitcoin")
-  ) {
-    return alert("It's a bad idea!");
-  }
-
-  return store.dispatch(action);
-}
-
 // root reducer
 const rootReducer = (state = {}, action) => ({
   todos: todos(state.todos, action),
@@ -85,7 +74,7 @@ const rootReducer = (state = {}, action) => ({
 });
 
 // store
-const store = createStore(rootReducer, {}, applyMiddleware(bitcoin));
+const store = createStore(rootReducer, {}, applyMiddleware(logger));
 
 // subscribe
 store.subscribe(() => {

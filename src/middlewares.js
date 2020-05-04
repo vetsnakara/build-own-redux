@@ -6,8 +6,15 @@ export const thunk = ({ dispatch, getState }) => (next) => (action) => {
 };
 
 export const logger = ({ dispatch, getState }) => (next) => (action) => {
-  console.log("action logger: ", action.type);
+  const stateBefore = getState();
   next(action);
+  const stateAfter = getState();
+
+  console.group(action.type);
+  console.log("prev state:", stateBefore);
+  console.log(("action", action));
+  console.log("new state:", stateAfter);
+  console.groupEnd(action.type);
 };
 
 export const bitcoin = ({ dispatch, getState }) => (next) => (action) => {
