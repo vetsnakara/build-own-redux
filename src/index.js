@@ -1,40 +1,37 @@
 import React from "react";
 import ReactDOM, { render } from "react-dom";
+import { Provider, connect } from "./customReactRedux";
 
 import { Todos } from "./components/Todos";
 import { Goals } from "./components/Goals";
 
 import { store } from "./store";
-import { fetchGoals, fetchTodos } from "./api";
-import { fetchDataAction } from "./actions";
+import { handleFetchData } from "./actions";
 
 class App extends React.Component {
   componentDidMount() {
-    this.unsubscribe = this.props.store.subscribe(() => this.forceUpdate());
-
-    Promise.all([fetchTodos(), fetchGoals()]).then(([todos, goals]) =>
-      this.props.store.dispatch(fetchDataAction(todos, goals))
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
+    this.props.dispatch(handleFetchData());
   }
 
   render() {
-    const { todos, goals, loading } = this.props.store.getState();
-
-    if (loading) {
+    if (this.props.loading) {
       return <h3>Loading ...</h3>;
     }
 
     return (
       <>
-        <Todos todos={todos} store={store} />
-        <Goals goals={goals} store={store} />
+        <Todos />
+        <Goals />
       </>
     );
   }
 }
 
-ReactDOM.render(<App store={store} />, document.querySelector("#root"));
+const ConnectedApp = connect((state) => ({ loading: state.loading }))(App);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <ConnectedApp store={store} />
+  </Provider>,
+  document.querySelector("#root")
+);

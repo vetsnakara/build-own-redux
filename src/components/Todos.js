@@ -1,21 +1,14 @@
 import React from "react";
+import { connect } from "../customReactRedux";
 
 import { List } from "./List";
 
 import { handleAddTodo, handleRemoveTodo, handleToggleTodo } from "../actions";
 
-export class Todos extends React.Component {
+class Todos extends React.Component {
   state = {
     text: "",
   };
-
-  componentDidMount() {
-    this.unsubscribe = this.props.store.subscribe(() => this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
 
   handleChange = ({ target: { value } }) => {
     this.setState({
@@ -24,21 +17,19 @@ export class Todos extends React.Component {
   };
 
   handleTodoAdd = () => {
-    this.props.store.dispatch(
-      handleAddTodo(this.state.text, () =>
-        this.setState({
-          text: "",
-        })
-      )
+    this.props.addTodo(this.state.text, () =>
+      this.setState({
+        text: "",
+      })
     );
   };
 
   handleTodoToggle = (todo) => {
-    this.props.store.dispatch(handleToggleTodo(todo.id));
+    this.props.toggleTodo(todo.id);
   };
 
   handleTodoRemove = (todo) => {
-    this.props.store.dispatch(handleRemoveTodo(todo));
+    this.props.removeTodo(todo);
   };
 
   render() {
@@ -68,3 +59,17 @@ export class Todos extends React.Component {
     );
   }
 }
+
+const mapState = (state) => ({
+  todos: state.todos,
+});
+
+const mapDispatch = (dispatch) => ({
+  addTodo: (text, cb) => dispatch(handleAddTodo(text, cb)),
+  toggleTodo: (id) => dispatch(handleToggleTodo(id)),
+  removeTodo: (todo) => dispatch(handleRemoveTodo(todo)),
+});
+
+const ConnectedTodos = connect(mapState, mapDispatch)(Todos);
+
+export { ConnectedTodos as Todos };

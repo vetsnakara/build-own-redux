@@ -1,21 +1,14 @@
 import React from "react";
+import { connect } from "../customReactRedux";
 
 import { List } from "./List";
 
 import { handleAddGoal, handleRemoveGoal } from "../actions";
 
-export class Goals extends React.Component {
+class Goals extends React.Component {
   state = {
     text: "",
   };
-
-  componentDidMount() {
-    this.unsubscribe = this.props.store.subscribe(() => this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
 
   handleChange = ({ target: { value, name } }) => {
     this.setState({
@@ -24,17 +17,15 @@ export class Goals extends React.Component {
   };
 
   handleGoalAdd = () => {
-    this.props.store.dispatch(
-      handleAddGoal(this.state.text, () =>
-        this.setState({
-          text: "",
-        })
-      )
+    this.props.addGoal(this.state.text, () =>
+      this.setState({
+        text: "",
+      })
     );
   };
 
   handleGoalRemove = (goal) => {
-    this.props.store.dispatch(handleRemoveGoal(goal));
+    this.props.removeGoal(goal);
   };
 
   render() {
@@ -57,3 +48,16 @@ export class Goals extends React.Component {
     );
   }
 }
+
+const mapState = (state) => ({
+  goals: state.goals,
+});
+
+const mapDispatch = (dispatch) => ({
+  addGoal: (text, cb) => dispatch(handleAddGoal(text, cb)),
+  removeGoal: (goal) => dispatch(handleRemoveGoal(goal)),
+});
+
+const ConnectedGoals = connect(mapState, mapDispatch)(Goals);
+
+export { ConnectedGoals as Goals };

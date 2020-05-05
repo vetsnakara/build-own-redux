@@ -86,3 +86,9 @@ export const handleRemoveGoal = (goal) => (dispatch) => {
     alert("An error occurred. Try again");
   });
 };
+
+export const handleFetchData = () => (dispatch) => {
+  Promise.all([api.fetchTodos(), api.fetchGoals()]).then(([todos, goals]) =>
+    dispatch(fetchDataAction(todos, goals))
+  );
+};
