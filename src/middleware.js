@@ -1,11 +1,16 @@
-export const thunk = ({ dispatch, getState }) => (next) => (action) => {
+import { applyMiddleware } from "redux";
+
+import thunk from "redux-thunk";
+import logger from "redux-logger";
+
+const customThunk = ({ dispatch, getState }) => (next) => (action) => {
   if (typeof action === "function") {
     return action(dispatch, getState);
   }
   return next(action);
 };
 
-export const logger = ({ dispatch, getState }) => (next) => (action) => {
+const customLogger = ({ dispatch, getState }) => (next) => (action) => {
   const stateBefore = getState();
   next(action);
   const stateAfter = getState();
@@ -17,10 +22,4 @@ export const logger = ({ dispatch, getState }) => (next) => (action) => {
   console.groupEnd(action.type);
 };
 
-export const bitcoin = ({ dispatch, getState }) => (next) => (action) => {
-  if (action.type === "ADD_TODO" && action.todo.name.includes("bitcoin")) {
-    return alert("BITCOIN id not a good idea!!!");
-  }
-
-  return next(action);
-};
+export const middleware = applyMiddleware(thunk, logger);
