@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM, { render } from "react-dom";
-import { Provider, connect } from "./customReactRedux";
+import { Provider, connect } from "react-redux";
 
 import { Todos } from "./components/Todos";
 import { Goals } from "./components/Goals";
